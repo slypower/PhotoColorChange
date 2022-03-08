@@ -8,6 +8,7 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
     @IBOutlet var viewController: UIView!
    
     @IBOutlet var redLabel: UILabel!
@@ -18,52 +19,52 @@ class ViewController: UIViewController {
     @IBOutlet var greenSlider: UISlider!
     @IBOutlet var blueSlider: UISlider!
     
-    private func textForLabel() {
-        redLabel.text = String(round(redSlider.value*100)/100)
-        greenLabel.text = String(round(greenSlider.value*100)/100)
-        blueLabel.text = String(round(blueSlider.value*100)/100)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        viewController.layer.cornerRadius = 10
+        
+        viewChangeColor()
+        setValue(for: redLabel, greenLabel, blueLabel)
     }
-    private func textForLabelRed() {
-        redLabel.text = String(round(redSlider.value*100)/100)
+
+    @IBAction func sliderChange(_ sender: UISlider) {
+        viewChangeColor()
+        
+        switch sender {
+        case redSlider:
+            redLabel.text = string(from: redSlider)
+        case greenSlider:
+            greenLabel.text = string(from: greenSlider)
+        default:
+            blueLabel.text = string(from: blueSlider)
+        }
     }
     
-    private func textForLabelGreen() {
-        greenLabel.text = String(round(greenSlider.value*100)/100)
+    private func string(from slider: UISlider) -> String {
+        return String(format: "%.2F", slider.value)
     }
     
-    private func textForLabelBlue() {
-        blueLabel.text = String(round(blueSlider.value*100)/100)
+    private func setValue(for labels: UILabel...) {
+        labels.forEach { label in
+            switch label {
+            case redLabel:
+                redLabel.text = string(from: redSlider)
+            case greenLabel:
+                greenLabel.text = string(from: greenSlider)
+            default:
+                blueLabel.text = string(from: blueSlider)
+            }
+        }
     }
     
     private func viewChangeColor() {
         let red = CGFloat(redSlider.value)*100
         let green = CGFloat(greenSlider.value)*100
         let blue = CGFloat(blueSlider.value)*100
-        viewController.backgroundColor = UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
+        viewController.backgroundColor = UIColor(red: red/255,
+                                                 green: green/255,
+                                                 blue: blue/255,
+                                                 alpha: 1)
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        viewController.layer.cornerRadius = 10
-        
-        textForLabel()
-        viewChangeColor()
-    }
-
-    @IBAction func redSliderChange() {
-        textForLabel()
-        viewChangeColor()
-    }
-    
-    @IBAction func greenSliderChange() {
-        textForLabel()
-        viewChangeColor()
-    }
-    
-    @IBAction func blueSliderChange() {
-        textForLabel()
-        viewChangeColor()
-    }
-    
 }
 
