@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  SettingViewController.swift
 //  PhotoColorChange
 //
 //  Created by Виталий Бобрик on 5.03.22.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class SettingViewController: UIViewController {
     
     @IBOutlet var viewController: UIView!
    
@@ -18,6 +18,10 @@ class ViewController: UIViewController {
     @IBOutlet var redSlider: UISlider!
     @IBOutlet var greenSlider: UISlider!
     @IBOutlet var blueSlider: UISlider!
+    
+    @IBOutlet var redTextField: UITextField!
+    @IBOutlet var greenTextField: UITextField!
+    @IBOutlet var blueTextField: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,11 +37,18 @@ class ViewController: UIViewController {
         switch sender {
         case redSlider:
             redLabel.text = string(from: redSlider)
+            redTextField.text = string(from: redSlider)
         case greenSlider:
             greenLabel.text = string(from: greenSlider)
+            greenTextField.text = string(from: greenSlider)
         default:
             blueLabel.text = string(from: blueSlider)
+            blueTextField.text = string(from: blueSlider)
         }
+    }
+    
+    @IBAction func PressDoneButton() {
+        dismiss(animated: true)
     }
     
     private func string(from slider: UISlider) -> String {
@@ -49,10 +60,13 @@ class ViewController: UIViewController {
             switch label {
             case redLabel:
                 redLabel.text = string(from: redSlider)
+                redTextField.text = string(from: redSlider)
             case greenLabel:
                 greenLabel.text = string(from: greenSlider)
+                greenTextField.text = string(from: greenSlider)
             default:
                 blueLabel.text = string(from: blueSlider)
+                blueTextField.text = string(from: blueSlider)
             }
         }
     }
