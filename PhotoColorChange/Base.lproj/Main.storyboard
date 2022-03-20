@@ -136,25 +136,25 @@
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="qaM-5j-ae7">
                                                 <rect key="frame" x="0.0" y="0.0" width="48" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="next"/>
                                                 <connections>
-                                                    <action selector="interInTextVield:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="YaA-Oj-Zxe"/>
+                                                    <action selector="interInTextVield:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="GVk-2F-8wD"/>
                                                 </connections>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="DqE-zd-6DS">
                                                 <rect key="frame" x="0.0" y="50" width="48" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="next"/>
                                                 <connections>
-                                                    <action selector="interInTextVield:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="8PB-H7-H1b"/>
+                                                    <action selector="interInTextVield:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="FhK-qM-ziR"/>
                                                 </connections>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gnx-ud-EKu">
                                                 <rect key="frame" x="0.0" y="100" width="48" height="34"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                                                 <connections>
-                                                    <action selector="interInTextVield:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="RV4-rj-H6h"/>
+                                                    <action selector="interInTextVield:" destination="BYZ-38-t0r" eventType="editingDidEnd" id="PJ5-Vg-qSD"/>
                                                 </connections>
                                             </textField>
                                         </subviews>

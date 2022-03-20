@@ -37,6 +37,10 @@ class SettingViewController: UIViewController {
         greenSlider.value = green
         blueSlider.value = blue
         
+        redTextField.delegate = self
+        greenTextField.delegate = self
+        blueTextField.delegate = self
+        
         viewChangeColor()
         setValue(for: redLabel, greenLabel, blueLabel)
     }
@@ -65,10 +69,21 @@ class SettingViewController: UIViewController {
         dismiss(animated: true)
     }
     
+    
     @IBAction func interInTextVield(_ sender: UITextField) {
-        guard let newValue = sender.text else {return}
-        guard let numberValue = Float(newValue) else {return}
         
+        guard let newValue = sender.text else {return}
+        guard let numberValue = Float(newValue) else {
+            showAlert(title: "Oops!", message: "Incorrect value entered")
+            return}
+        
+        if numberValue > 1 {
+            showAlert(title: "Oops!", message: "Incorrect value entered")
+            return
+        }
+        
+        /*
+        // Почему не реализовывать так, а нужно через delegate
         if sender == redTextField {
             redSlider.value = numberValue
         } else if sender == greenTextField {
@@ -78,6 +93,7 @@ class SettingViewController: UIViewController {
         }
         viewChangeColor()
         setValue(for: redLabel, greenLabel, blueLabel)
+         */
     }
     
     private func string(from slider: UISlider) -> String {
@@ -108,5 +124,51 @@ class SettingViewController: UIViewController {
                                                  green: green/255,
                                                  blue: blue/255,
                                                  alpha: 1)
+    }
+}
+
+//MARK: UITextFieldDelegate
+extension SettingViewController: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        print(textField)
+        guard let newValue = textField.text else {return}
+        guard let numberValue = Float(newValue) else {return}
+        
+        if textField == redTextField {
+            redSlider.value = numberValue
+        } else if textField == greenTextField {
+            greenSlider.value = numberValue
+        } else {
+            blueSlider.value = numberValue
+        }
+        viewChangeColor()
+        setValue(for: redLabel, greenLabel, blueLabel)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        view.endEditing(true)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == redTextField {
+            greenTextField.becomeFirstResponder()
+        } else if textField == greenTextField {
+            blueTextField.becomeFirstResponder()
+        } else {
+            PressDoneButton()
+        }
+        return true
+    }
+    
+}
+
+//MARK: - Alert Controller
+extension SettingViewController {
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "OK", style: .default)
+        alert.addAction(okAction)
+        present(alert, animated: true)
     }
 }
