@@ -23,9 +23,19 @@ class SettingViewController: UIViewController {
     @IBOutlet var greenTextField: UITextField!
     @IBOutlet var blueTextField: UITextField!
     
+    var red: Float = 0.0
+    var green: Float = 0.0
+    var blue: Float = 0.0
+    
+    var delegate: SettingsViewControllerDelegate!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         viewController.layer.cornerRadius = 10
+        
+        redSlider.value = red
+        greenSlider.value = green
+        blueSlider.value = blue
         
         viewChangeColor()
         setValue(for: redLabel, greenLabel, blueLabel)
@@ -48,7 +58,26 @@ class SettingViewController: UIViewController {
     }
     
     @IBAction func PressDoneButton() {
+        view.endEditing(true)
+        delegate.setColorBackround(with: redSlider.value,
+                                   and: greenSlider.value,
+                                   end: blueSlider.value)
         dismiss(animated: true)
+    }
+    
+    @IBAction func interInTextVield(_ sender: UITextField) {
+        guard let newValue = sender.text else {return}
+        guard let numberValue = Float(newValue) else {return}
+        
+        if sender == redTextField {
+            redSlider.value = numberValue
+        } else if sender == greenTextField {
+            greenSlider.value = numberValue
+        } else {
+            blueSlider.value = numberValue
+        }
+        viewChangeColor()
+        setValue(for: redLabel, greenLabel, blueLabel)
     }
     
     private func string(from slider: UISlider) -> String {
@@ -81,4 +110,3 @@ class SettingViewController: UIViewController {
                                                  alpha: 1)
     }
 }
-
