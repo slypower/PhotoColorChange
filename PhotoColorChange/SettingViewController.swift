@@ -23,32 +23,24 @@ class SettingViewController: UIViewController {
     @IBOutlet var greenTextField: UITextField!
     @IBOutlet var blueTextField: UITextField!
     
-    var red: Float = 0.0
-    var green: Float = 0.0
-    var blue: Float = 0.0
-    
+    var viewColor: UIColor!
     var delegate: SettingsViewControllerDelegate!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         viewController.layer.cornerRadius = 10
         
-        redSlider.value = red
-        greenSlider.value = green
-        blueSlider.value = blue
+        viewController.backgroundColor = viewColor
         
-        redTextField.delegate = self
-        greenTextField.delegate = self
-        blueTextField.delegate = self
-        
-        viewChangeColor()
+        setSliders()
         setValue(for: redLabel, greenLabel, blueLabel)
+        setValue(for: redTextField, greenTextField, blueTextField)
     }
 
     @IBAction func sliderChange(_ sender: UISlider) {
-        viewChangeColor()
-        
+   
         switch sender {
+            /* 21.03.2022
         case redSlider:
             redLabel.text = string(from: redSlider)
             redTextField.text = string(from: redSlider)
@@ -58,42 +50,23 @@ class SettingViewController: UIViewController {
         default:
             blueLabel.text = string(from: blueSlider)
             blueTextField.text = string(from: blueSlider)
-        }
-    }
-    
-    @IBAction func PressDoneButton() {
-        view.endEditing(true)
-        delegate.setColorBackround(with: redSlider.value,
-                                   and: greenSlider.value,
-                                   end: blueSlider.value)
-        dismiss(animated: true)
-    }
-    
-    
-    @IBAction func interInTextVield(_ sender: UITextField) {
-        
-        guard let newValue = sender.text else {return}
-        guard let numberValue = Float(newValue) else {
-            showAlert(title: "Oops!", message: "Incorrect value entered")
-            return}
-        
-        if numberValue > 1 {
-            showAlert(title: "Oops!", message: "Incorrect value entered")
-            return
-        }
-        
-        /*
-        // Почему не реализовывать так, а нужно через delegate
-        if sender == redTextField {
-            redSlider.value = numberValue
-        } else if sender == greenTextField {
-            greenSlider.value = numberValue
-        } else {
-            blueSlider.value = numberValue
+             */
+        case redSlider:
+            setValue(for: redLabel)
+            setValue(for: redTextField)
+        case greenSlider:
+            setValue(for: greenLabel)
+            setValue(for: greenTextField)
+        default:
+            setValue(for: blueLabel)
+            setValue(for: blueTextField)
         }
         viewChangeColor()
-        setValue(for: redLabel, greenLabel, blueLabel)
-         */
+    }
+    
+    @IBAction func pressDoneButton() {
+        delegate?.setColor(viewController.backgroundColor ?? .white)
+        dismiss(animated: true)
     }
     
     private func string(from slider: UISlider) -> String {
@@ -103,62 +76,99 @@ class SettingViewController: UIViewController {
     private func setValue(for labels: UILabel...) {
         labels.forEach { label in
             switch label {
-            case redLabel:
-                redLabel.text = string(from: redSlider)
-                redTextField.text = string(from: redSlider)
-            case greenLabel:
-                greenLabel.text = string(from: greenSlider)
-                greenTextField.text = string(from: greenSlider)
-            default:
-                blueLabel.text = string(from: blueSlider)
-                blueTextField.text = string(from: blueSlider)
+            case redLabel: label.text = string(from: redSlider)
+            case greenLabel: label.text = string(from: greenSlider)
+            default: label.text = string(from: blueSlider)
             }
         }
     }
     
+    private func setValue(for textFields: UITextField...) {
+        textFields.forEach { textField in
+            switch textField {
+            case redTextField: textField.text = string(from: redSlider)
+            case greenTextField: textField.text = string(from: greenSlider)
+            default: textField.text = string(from: blueSlider)
+            }
+        }
+    }
+    
+    private func setSliders() {
+        let ciColor = CIColor(color: viewColor)
+        
+        redSlider.value = Float(ciColor.red)
+        greenSlider.value = Float(ciColor.green)
+        blueSlider.value = Float(ciColor.blue)
+    }
+    
+    @objc private func didTapDone() {
+        view.endEditing(true)
+    }
+    
     private func viewChangeColor() {
-        let red = CGFloat(redSlider.value)*100
-        let green = CGFloat(greenSlider.value)*100
-        let blue = CGFloat(blueSlider.value)*100
-        viewController.backgroundColor = UIColor(red: red/255,
-                                                 green: green/255,
-                                                 blue: blue/255,
+        viewController.backgroundColor = UIColor(red: CGFloat(redSlider.value),
+                                                 green: CGFloat(greenSlider.value),
+                                                 blue: CGFloat(blueSlider.value),
                                                  alpha: 1)
     }
 }
 
 //MARK: UITextFieldDelegate
 extension SettingViewController: UITextFieldDelegate {
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        print(textField)
-        guard let newValue = textField.text else {return}
-        guard let numberValue = Float(newValue) else {return}
+   
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+     
+        let keyboardToolbar = UIToolbar()
+        keyboardToolbar.sizeToFit()
+        textField.inputAccessoryView = keyboardToolbar
         
-        if textField == redTextField {
-            redSlider.value = numberValue
-        } else if textField == greenTextField {
-            greenSlider.value = numberValue
-        } else {
-            blueSlider.value = numberValue
+        let doneButton = UIBarButtonItem(
+            barButtonSystemItem: .done, target: self, action: #selector(didTapDone)
+        )
+        
+        let flexBarButton = UIBarButtonItem (
+            barButtonSystemItem: .flexibleSpace, target: nil, action: nil
+        )
+        
+        keyboardToolbar.items = [flexBarButton, doneButton]
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+    
+        guard let newValue = textField.text else {
+            showAlert(title: "Oops!", message: "Incorrect value entered")
+            return
         }
-        viewChangeColor()
-        setValue(for: redLabel, greenLabel, blueLabel)
+        
+        guard let currentValue = Float(newValue) else {
+            showAlert(title: "Oops!", message: "Incorrect value entered")
+            return
+        }
+        
+        if  currentValue <= 1.00  {
+            switch textField {
+            case redTextField:
+                redSlider.setValue(currentValue, animated: true)
+                setValue(for: redLabel)
+            case greenTextField:
+                greenSlider.setValue(currentValue, animated: true)
+                setValue(for: greenLabel)
+            default:
+                blueSlider.setValue(currentValue, animated: true)
+                setValue(for: blueLabel)
+            }
+            
+            viewChangeColor()
+            return
+        }
+
+            showAlert(title: "Oops!", message: "Incorrect value entered")
+
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         view.endEditing(true)
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == redTextField {
-            greenTextField.becomeFirstResponder()
-        } else if textField == greenTextField {
-            blueTextField.becomeFirstResponder()
-        } else {
-            PressDoneButton()
-        }
-        return true
     }
     
 }
